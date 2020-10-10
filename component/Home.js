@@ -7,6 +7,7 @@ import {
   Image,
   Text,
   FlatList,
+  TouchableOpacity,
   PermissionsAndroid,
 } from 'react-native';
 import moment from 'moment';
@@ -15,7 +16,9 @@ import * as actions from '../actions'
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import Loader from './Loader.js'
-Geocoder.init('AIzaSyDAp4vEn-maEzGvN1EOEVN9mlNqNxKlZ48'); // use a valid API key
+import AppError from './AppError';
+Geocoder.init('AIzaSyDAp4vEn-maEzGvN1EOEVN9mlNqNxKlZ48');
+
 class Home extends React.Component{
 
     constructor(props){
@@ -26,6 +29,10 @@ class Home extends React.Component{
         }
     }
 
+    retryFunction = () => {
+      this.setState({loading:true})
+      this.getCurrrentLocation()
+    }
 
 
 // This method is calling to convert latitude and longiude to address
@@ -74,10 +81,11 @@ class Home extends React.Component{
   }
 
 
-  disableLoader(){
+  listCallback(){
     this.setState({
       loading:false
     })
+  
   }
 
   //Calling to get current location
@@ -88,7 +96,7 @@ class Home extends React.Component{
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         }
-        this.props.getWeatherData(currentCoordinate,this.disableLoader())
+        this.props.getWeatherData(currentCoordinate)
         this.convertAddress(currentCoordinate.latitude,currentCoordinate.longitude)
       },
       (error) => {
@@ -101,7 +109,10 @@ class Home extends React.Component{
 
 
   componentDidMount() {
-    this.requestLocationPermission();
+    setTimeout(() => {
+      this.requestLocationPermission();
+    }, 1000)
+
   }
 
   getFormatedDate(timeStamp){
@@ -130,9 +141,12 @@ class Home extends React.Component{
    render(){
       return(
           <View>
-             {this.state.loading?
+           {this.state.loading? 
             <Loader/>
-            :<View> 
+            :<View>
+              {this.props.ds_error_key=='Error'?
+              <AppError retryFunction = {this.retryFunction}/>:
+              <View> 
             <View style={{justifyContent:'center',alignItems:'center',height:'40%'}}>
             <Text style={homeStyle.headerTempStyle}>{this.props.weatherData.current.temp}</Text>
             <Text style={homeStyle.headerStyle}>{this.state.currentLocation}</Text>
@@ -143,6 +157,9 @@ class Home extends React.Component{
               keyExtractor={(item, index) =>item.sunrise}>
              </FlatList>
              </View>
+               }
+             </View>
+          
             }
           </View>
       )
@@ -167,12 +184,33 @@ const homeStyle=StyleSheet.create({
     },
     headerTempStyle:{
         fontSize:100,
-    }
+    },
+    messageStyle:{
+      fontSize:45,
+      marginBottom:20,
+  },
+  retryContainerStyle:{
+      flexDirection: 'column',
+      justifyContent: 'center',
+      backgroundColor:'#fff',
+      borderColor: 'black',
+      width:100,
+      height:50,
+      borderWidth: 1,
+      alignItems: 'center'
+  },
+  containerStyle:{
+       flexDirection: 'column',
+      justifyContent: 'center',
+      backgroundColor:'#fff',
+      alignItems: 'center',
+      height: '100%'}
+  
 });
 
 
 function mapStateToProps({ auth }) {
-  const { weatherData,ds_error_key} = auth
-  return { weatherData,ds_error_key}
+  const { weatherData,ds_error_key,retry} = auth
+  return { weatherData,ds_error_key,retry}
 }
 export default connect(mapStateToProps, actions)(Home)
