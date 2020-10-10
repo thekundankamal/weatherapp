@@ -185,26 +185,7 @@ const homeStyle=StyleSheet.create({
     headerTempStyle:{
         fontSize:100,
     },
-    messageStyle:{
-      fontSize:45,
-      marginBottom:20,
-  },
-  retryContainerStyle:{
-      flexDirection: 'column',
-      justifyContent: 'center',
-      backgroundColor:'#fff',
-      borderColor: 'black',
-      width:100,
-      height:50,
-      borderWidth: 1,
-      alignItems: 'center'
-  },
-  containerStyle:{
-       flexDirection: 'column',
-      justifyContent: 'center',
-      backgroundColor:'#fff',
-      alignItems: 'center',
-      height: '100%'}
+
   
 });
 
