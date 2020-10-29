@@ -16,7 +16,6 @@ import * as actions from '../actions'
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import Loader from './Loader.js'
-import AppError from './AppError';
 Geocoder.init('AIzaSyDAp4vEn-maEzGvN1EOEVN9mlNqNxKlZ48');
 
 class Home extends React.Component{
@@ -47,9 +46,6 @@ class Home extends React.Component{
     })
     .catch(error => console.warn(error));
  }
-
-
-
 
   async requestLocationPermission() {
     try {
@@ -144,9 +140,6 @@ class Home extends React.Component{
            {this.state.loading? 
             <Loader/>
             :<View>
-              {this.props.ds_error_key=='Error'?
-              <AppError retryFunction = {this.retryFunction}/>:
-              <View> 
             <View style={{justifyContent:'center',alignItems:'center',height:'40%'}}>
             <Text style={homeStyle.headerTempStyle}>{this.props.weatherData.current.temp}</Text>
             <Text style={homeStyle.headerStyle}>{this.state.currentLocation}</Text>
@@ -157,9 +150,7 @@ class Home extends React.Component{
               keyExtractor={(item, index) =>item.sunrise}>
              </FlatList>
              </View>
-               }
-             </View>
-          
+        
             }
           </View>
       )

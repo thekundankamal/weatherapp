@@ -15,7 +15,6 @@ export const getWeatherData = (currentCoordinate) => {
     async function onSuccess(success) {
       console.log("data---"+JSON.stringify(success))
       dispatch({ type: GET_WEATHER_DATA, payload: success});
-  
     }
     function onError(error) {
       dispatch({ type: ERROR_GENERATED, payload:'Error' });

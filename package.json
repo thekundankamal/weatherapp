@@ -16,6 +16,7 @@
     "react-native": "0.63.3",
     "react-native-geocoding": "^0.4.0",
     "react-native-geolocation-service": "^5.0.0",
+    "react-native-restart": "^0.0.17",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"

@@ -5,19 +5,35 @@ import {
   Text,
   TouchableOpacity
 } from 'react-native';
+import RNRestart from 'react-native-restart'
+
  export default class AppError extends React.Component{
+     constructor(props){
+         super(props)
+         this.state={hasError:false}
+     }
+       
+
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+     return { hasError: true };
+      }
 
 
-    render(){
+      render(){
+        if(this.state.hasError){  
         return(
         <View style={errorStyle.containerStyle}>
             <Text style={errorStyle.messageStyle}>Something {"\n"}Went Wrong {"\n"}at our End</Text>
-            <TouchableOpacity style={errorStyle.retryContainerStyle} onPress={(view)=>this.props.retryFunction()} >
+            <TouchableOpacity style={errorStyle.retryContainerStyle} onPress={(view)=>RNRestart.Restart()} >
                 <Text style={{ color: 'black',
                 fontSize: 16}} >RERTY</Text>
             </TouchableOpacity>
         </View>
         )
+        }else{
+            return this.props.children;
+        }
     }
 
 }
